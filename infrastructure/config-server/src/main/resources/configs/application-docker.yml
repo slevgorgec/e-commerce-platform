@@ -1,0 +1,17 @@
+# Docker Compose ortamında tüm servisler için ortak override
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
+logging:
+  level:
+    root: INFO
+    com.n11bootcamp.ecommerce: INFO

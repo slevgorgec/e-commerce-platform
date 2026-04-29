@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/configs/
+
+logging:
+  level:
+    root: INFO
+    com.n11bootcamp.ecommerce: INFO
