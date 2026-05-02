@@ -53,9 +53,6 @@ public class OrderMapper {
                 .map(item -> new CreateOrderCommand.OrderItemData(
                         item.productId(),
                         item.variantId(),
-                        item.productName(),
-                        item.variantValue(),
-                        item.unitPrice(),
                         item.quantity()
                 ))
                 .toList();

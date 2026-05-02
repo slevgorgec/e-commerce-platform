@@ -4,6 +4,8 @@ import com.n11bootcamp.ecommerce.order.application.dto.CreateOrderCommand;
 import com.n11bootcamp.ecommerce.order.application.port.in.CreateOrderUseCase;
 import com.n11bootcamp.ecommerce.order.application.port.out.EventPublisherPort;
 import com.n11bootcamp.ecommerce.order.application.port.out.OrderRepositoryPort;
+import com.n11bootcamp.ecommerce.order.application.port.out.ProductServicePort;
+import com.n11bootcamp.ecommerce.order.domain.exception.DomainException;
 import com.n11bootcamp.ecommerce.order.domain.model.Order;
 import com.n11bootcamp.ecommerce.order.domain.model.OrderItem;
 import com.n11bootcamp.ecommerce.order.domain.model.ShippingAddress;
@@ -22,6 +24,7 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
 
     private final OrderRepositoryPort orderRepository;
     private final EventPublisherPort eventPublisher;
+    private final ProductServicePort productService;
 
     @Override
     @Transactional
@@ -42,16 +45,22 @@ public class CreateOrderUseCaseImpl implements CreateOrderUseCase {
 
     private List<OrderItem> mapItems(CreateOrderCommand command) {
         return command.items().stream()
-                .map(item -> new OrderItem(
-                        UUID.randomUUID(),
-                        null, // orderId, save sonrası entity'de set edilir
-                        item.productId(),
-                        item.variantId(),
-                        item.productName(),
-                        item.variantValue(),
-                        item.unitPrice(),
-                        item.quantity()
-                ))
+                .map(item -> {
+                    var variant = productService.getVariantInfo(item.variantId());
+                    if (!variant.active()) {
+                        throw new DomainException("Ürün aktif değil: variantId=" + item.variantId());
+                    }
+                    return new OrderItem(
+                            UUID.randomUUID(),
+                            null, // orderId, save sonrası entity'de set edilir
+                            variant.productId(),
+                            variant.variantId(),
+                            variant.productName(),
+                            variant.variantValue(),
+                            variant.price(),  // Fiyat Product Service'ten alınır, client'tan değil
+                            item.quantity()
+                    );
+                })
                 .toList();
     }
 

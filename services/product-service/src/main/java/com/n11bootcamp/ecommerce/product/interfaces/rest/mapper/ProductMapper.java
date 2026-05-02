@@ -13,33 +13,33 @@ import java.util.UUID;
 public class ProductMapper {
 
     public CategoryResponse toResponse(Category category) {
-        return new CategoryResponse(category.id(), category.name(), category.slug(), category.parentId());
+        return new CategoryResponse(category.id(), category.name(), category.slug(), category.parentId(), category.imageUrl());
     }
 
     public CreateCategoryCommand toCommand(CreateCategoryRequest request) {
-        return new CreateCategoryCommand(request.name(), request.slug(), request.parentId());
+        return new CreateCategoryCommand(request.name(), request.slug(), request.parentId(), request.imageUrl());
     }
 
     public UpdateCategoryCommand toCommand(UUID id, UpdateCategoryRequest request) {
-        return new UpdateCategoryCommand(id, request.name(), request.slug());
+        return new UpdateCategoryCommand(id, request.name(), request.slug(), request.imageUrl());
     }
 
     public ProductResponse toResponse(Product product) {
         return new ProductResponse(
                 product.id(), product.name(), product.slug(), product.description(),
                 product.categoryId(), product.basePrice(), product.active(),
-                product.createdAt(), product.updatedAt()
+                product.imageUrl(), product.createdAt(), product.updatedAt()
         );
     }
 
     public CreateProductCommand toCommand(CreateProductRequest request) {
         return new CreateProductCommand(request.name(), request.slug(), request.description(),
-                request.categoryId(), request.basePrice());
+                request.categoryId(), request.basePrice(), request.imageUrl());
     }
 
     public UpdateProductCommand toCommand(UUID id, UpdateProductRequest request) {
         return new UpdateProductCommand(id, request.name(), request.slug(), request.description(),
-                request.categoryId(), request.basePrice(), request.active());
+                request.categoryId(), request.basePrice(), request.active(), request.imageUrl());
     }
 
     public AddVariantCommand toCommand(UUID productId, AddVariantRequest request) {

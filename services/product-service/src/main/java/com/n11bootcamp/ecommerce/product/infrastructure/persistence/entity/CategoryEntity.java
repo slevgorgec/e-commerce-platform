@@ -26,4 +26,7 @@ public class CategoryEntity {
 
     @Column(name = "parent_id", columnDefinition = "uuid")
     private UUID parentId;
+
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
 }

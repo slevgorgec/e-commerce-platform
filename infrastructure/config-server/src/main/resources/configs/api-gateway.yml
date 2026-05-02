@@ -19,40 +19,26 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/api/auth/**, /api/users/**
-          filters:
-            - name: JwtAuthFilter
-              args:
-                public-paths: /api/auth/register,/api/auth/login
 
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/api/products/**, /api/categories/**
-          filters:
-            - name: JwtAuthFilter
-              args:
-                public-paths: GET:/api/products/**,GET:/api/categories/**
 
         - id: cart-service
           uri: lb://cart-service
           predicates:
             - Path=/api/cart/**
-          filters:
-            - JwtAuthFilter
 
         - id: order-service
           uri: lb://order-service
           predicates:
             - Path=/api/orders/**
-          filters:
-            - JwtAuthFilter
 
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/api/payments/**
-          filters:
-            - JwtAuthFilter
 
 jwt:
-  secret: ${JWT_SECRET:local-dev-secret-key-must-be-changed-in-production-min-256-bits}
+  secret: ${JWT_SECRET}

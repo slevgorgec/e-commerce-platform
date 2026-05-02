@@ -26,11 +26,10 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     // Method + path prefix çiftleri olarak public endpoint'ler
     private static final List<PublicRoute> PUBLIC_ROUTES = List.of(
-            new PublicRoute(HttpMethod.POST, "/api/auth/"),
-            new PublicRoute(HttpMethod.GET,  "/api/products/"),
-            new PublicRoute(HttpMethod.GET,  "/api/categories/"),
-            // Swagger / actuator endpoint'leri
-            new PublicRoute(HttpMethod.GET,  "/actuator/")
+            new PublicRoute(HttpMethod.POST, "/api/auth"),
+            new PublicRoute(HttpMethod.GET,  "/api/products"),
+            new PublicRoute(HttpMethod.GET,  "/api/categories"),
+            new PublicRoute(HttpMethod.GET,  "/actuator")
     );
 
     @Override
@@ -38,7 +37,9 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
 
         if (isPublicRoute(request)) {
-            return chain.filter(exchange);
+            // Client'ın gönderdiği X-User-Id/X-User-Role header'larını her durumda sil
+            ServerHttpRequest stripped = stripTrustedHeaders(request).build();
+            return chain.filter(exchange.mutate().request(stripped).build());
         }
 
         String token = extractBearerToken(request);
@@ -51,7 +52,8 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             String userId = claims.getSubject();
             String role   = claims.get("role", String.class);
 
-            ServerHttpRequest mutatedRequest = request.mutate()
+            // Önce client header'larını sil, ardından JWT'den doğrulanmış değerleri ekle
+            ServerHttpRequest mutatedRequest = stripTrustedHeaders(request)
                     .header("X-User-Id",   userId)
                     .header("X-User-Role", role)
                     .build();
@@ -62,6 +64,14 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
             log.warn("JWT validation failed for path {}: {}", request.getPath(), e.getMessage());
             return rejectUnauthorized(exchange, "Invalid or expired token");
         }
+    }
+
+    private ServerHttpRequest.Builder stripTrustedHeaders(ServerHttpRequest request) {
+        return request.mutate()
+                .headers(headers -> {
+                    headers.remove("X-User-Id");
+                    headers.remove("X-User-Role");
+                });
     }
 
     @Override

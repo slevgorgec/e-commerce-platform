@@ -29,7 +29,7 @@ public class UpdateProductUseCaseImpl implements UpdateProductUseCase {
         }
 
         var updated = existing.update(command.name(), command.slug(), command.description(),
-                command.categoryId(), command.basePrice(), command.active());
+                command.categoryId(), command.basePrice(), command.active(), command.imageUrl());
         var saved = productRepository.save(updated);
         log.info("Ürün güncellendi: id={}", saved.id());
         return saved;

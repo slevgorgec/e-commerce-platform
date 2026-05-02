@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -47,6 +49,20 @@ public class GlobalExceptionHandler {
                 "message", errors,
                 "path", req.getRequestURI()
         ));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex,
+                                                                   HttpServletRequest req) {
+        log.info("Yetki hatası: path={}", req.getRequestURI());
+        return error(HttpStatus.FORBIDDEN, "FORBIDDEN", "Bu işlem için yetkiniz yok", req.getRequestURI());
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<Map<String, Object>> handleMissingHeader(MissingRequestHeaderException ex,
+                                                                    HttpServletRequest req) {
+        log.info("Eksik header: {}", ex.getHeaderName());
+        return error(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED", "Kimlik doğrulama gerekli", req.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)

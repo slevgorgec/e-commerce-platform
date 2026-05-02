@@ -72,6 +72,7 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
         entity.setCategoryId(product.categoryId());
         entity.setBasePrice(product.basePrice());
         entity.setActive(product.active());
+        entity.setImageUrl(product.imageUrl());
         entity.setCreatedAt(product.createdAt());
         entity.setUpdatedAt(product.updatedAt());
         return entity;
@@ -81,7 +82,7 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
         return new Product(
                 entity.getId(), entity.getName(), entity.getSlug(), entity.getDescription(),
                 entity.getCategoryId(), entity.getBasePrice(), entity.isActive(),
-                entity.getCreatedAt(), entity.getUpdatedAt()
+                entity.getImageUrl(), entity.getCreatedAt(), entity.getUpdatedAt()
         );
     }
 }

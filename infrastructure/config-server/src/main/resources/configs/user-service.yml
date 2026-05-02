@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/user_db
-    username: postgres
-    password: postgres
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -25,6 +25,6 @@ eureka:
     prefer-ip-address: true
 
 jwt:
-  secret: ${JWT_SECRET:local-dev-secret-key-must-be-changed-in-production-min-256-bits}
+  secret: ${JWT_SECRET}
   access-token-expiration-ms: 900000      # 15 dakika
   refresh-token-expiration-ms: 604800000  # 7 gün

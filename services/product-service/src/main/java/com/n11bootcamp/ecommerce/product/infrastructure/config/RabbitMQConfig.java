@@ -64,23 +64,23 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding orderCreatedBinding(Queue orderCreatedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(orderCreatedQueue).to(ecommerceExchange).with("order.created");
+    public Binding orderCreatedBinding() {
+        return BindingBuilder.bind(orderCreatedQueue()).to(ecommerceExchange()).with("order.created");
     }
 
     @Bean
-    public Binding orderCancelledBinding(Queue orderCancelledQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(orderCancelledQueue).to(ecommerceExchange).with("order.cancelled");
+    public Binding orderCancelledBinding() {
+        return BindingBuilder.bind(orderCancelledQueue()).to(ecommerceExchange()).with("order.cancelled");
     }
 
     @Bean
-    public Binding paymentCompletedBinding(Queue paymentCompletedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(paymentCompletedQueue).to(ecommerceExchange).with("payment.completed");
+    public Binding paymentCompletedBinding() {
+        return BindingBuilder.bind(paymentCompletedQueue()).to(ecommerceExchange()).with("payment.completed");
     }
 
     @Bean
-    public Binding paymentFailedBinding(Queue paymentFailedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(paymentFailedQueue).to(ecommerceExchange).with("payment.failed");
+    public Binding paymentFailedBinding() {
+        return BindingBuilder.bind(paymentFailedQueue()).to(ecommerceExchange()).with("payment.failed");
     }
 
     @Bean

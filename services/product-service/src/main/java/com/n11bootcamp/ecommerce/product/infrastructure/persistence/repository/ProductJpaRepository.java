@@ -21,7 +21,7 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, UUID>
             AND (:categoryId IS NULL OR p.categoryId = :categoryId)
             AND (:minPrice IS NULL OR p.basePrice >= :minPrice)
             AND (:maxPrice IS NULL OR p.basePrice <= :maxPrice)
-            AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')))
+            AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', CAST(:search AS String), '%')))
             """)
     Page<ProductEntity> findFiltered(
             @Param("categoryId") UUID categoryId,

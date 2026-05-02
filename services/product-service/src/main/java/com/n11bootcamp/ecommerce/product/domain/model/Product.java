@@ -12,23 +12,24 @@ public record Product(
         UUID categoryId,
         BigDecimal basePrice,
         boolean active,
+        String imageUrl,
         Instant createdAt,
         Instant updatedAt
 ) {
     public static Product create(String name, String slug, String description,
-                                  UUID categoryId, BigDecimal basePrice) {
+                                  UUID categoryId, BigDecimal basePrice, String imageUrl) {
         return new Product(UUID.randomUUID(), name, slug, description, categoryId,
-                basePrice, true, Instant.now(), null);
+                basePrice, true, imageUrl, Instant.now(), null);
     }
 
     public Product update(String name, String slug, String description,
-                          UUID categoryId, BigDecimal basePrice, boolean active) {
+                          UUID categoryId, BigDecimal basePrice, boolean active, String imageUrl) {
         return new Product(id, name, slug, description, categoryId, basePrice, active,
-                createdAt, Instant.now());
+                imageUrl, createdAt, Instant.now());
     }
 
     public Product deactivate() {
         return new Product(id, name, slug, description, categoryId, basePrice, false,
-                createdAt, Instant.now());
+                imageUrl, createdAt, Instant.now());
     }
 }

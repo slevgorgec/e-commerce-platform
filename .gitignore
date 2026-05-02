@@ -30,3 +30,6 @@ docker-compose.override.yml
 ### Environment ###
 .env
 *.env
+.env.local
+.env.*.local
+frontend/.env.local

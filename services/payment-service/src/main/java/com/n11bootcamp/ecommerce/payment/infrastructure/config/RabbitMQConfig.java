@@ -38,8 +38,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding paymentRequestedBinding(Queue paymentRequestedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(paymentRequestedQueue).to(ecommerceExchange).with("payment.requested");
+    public Binding paymentRequestedBinding() {
+        return BindingBuilder.bind(paymentRequestedQueue()).to(ecommerceExchange()).with("payment.requested");
     }
 
     @Bean

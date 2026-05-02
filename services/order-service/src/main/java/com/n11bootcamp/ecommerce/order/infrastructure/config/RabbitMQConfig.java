@@ -65,23 +65,23 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding stockReservedBinding(Queue stockReservedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(stockReservedQueue).to(ecommerceExchange).with("stock.reserved");
+    public Binding stockReservedBinding() {
+        return BindingBuilder.bind(stockReservedQueue()).to(ecommerceExchange()).with("stock.reserved");
     }
 
     @Bean
-    public Binding stockReservationFailedBinding(Queue stockReservationFailedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(stockReservationFailedQueue).to(ecommerceExchange).with("stock.reservation.failed");
+    public Binding stockReservationFailedBinding() {
+        return BindingBuilder.bind(stockReservationFailedQueue()).to(ecommerceExchange()).with("stock.reservation.failed");
     }
 
     @Bean
-    public Binding paymentCompletedBinding(Queue paymentCompletedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(paymentCompletedQueue).to(ecommerceExchange).with("payment.completed");
+    public Binding paymentCompletedBinding() {
+        return BindingBuilder.bind(paymentCompletedQueue()).to(ecommerceExchange()).with("payment.completed");
     }
 
     @Bean
-    public Binding paymentFailedBinding(Queue paymentFailedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(paymentFailedQueue).to(ecommerceExchange).with("payment.failed");
+    public Binding paymentFailedBinding() {
+        return BindingBuilder.bind(paymentFailedQueue()).to(ecommerceExchange()).with("payment.failed");
     }
 
     @Bean

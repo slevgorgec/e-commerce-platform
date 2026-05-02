@@ -53,10 +53,11 @@ public class CategoryRepositoryAdapter implements CategoryRepositoryPort {
         entity.setName(category.name());
         entity.setSlug(category.slug());
         entity.setParentId(category.parentId());
+        entity.setImageUrl(category.imageUrl());
         return entity;
     }
 
     private Category toModel(CategoryEntity entity) {
-        return new Category(entity.getId(), entity.getName(), entity.getSlug(), entity.getParentId());
+        return new Category(entity.getId(), entity.getName(), entity.getSlug(), entity.getParentId(), entity.getImageUrl());
     }
 }

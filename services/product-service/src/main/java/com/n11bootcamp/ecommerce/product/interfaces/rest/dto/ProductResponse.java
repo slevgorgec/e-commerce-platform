@@ -12,6 +12,7 @@ public record ProductResponse(
         UUID categoryId,
         BigDecimal basePrice,
         boolean active,
+        String imageUrl,
         Instant createdAt,
         Instant updatedAt
 ) {}

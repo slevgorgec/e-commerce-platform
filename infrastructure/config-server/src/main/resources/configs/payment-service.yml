@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5436/payment_db
-    username: postgres
-    password: postgres
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -25,6 +25,6 @@ eureka:
     prefer-ip-address: true
 
 iyzico:
-  api-key: ${IYZICO_API_KEY:sandbox-api-key}
-  secret-key: ${IYZICO_SECRET_KEY:sandbox-secret-key}
-  base-url: ${IYZICO_BASE_URL:https://sandbox-api.iyzipay.com}
+  api-key: ${IYZICO_API_KEY}
+  secret-key: ${IYZICO_SECRET_KEY}
+  base-url: ${IYZICO_BASE_URL}

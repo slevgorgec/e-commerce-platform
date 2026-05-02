@@ -32,7 +32,7 @@ class CreateProductUseCaseTest {
     @Test
     void execute_givenValidCommand_createsProduct() {
         var command = new CreateProductCommand("Test Ürün", "test-urun", "Açıklama",
-                UUID.randomUUID(), new BigDecimal("99.90"));
+                UUID.randomUUID(), new BigDecimal("99.90"), null);
 
         when(productRepository.existsBySlug(command.slug())).thenReturn(false);
         when(productRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
@@ -48,7 +48,7 @@ class CreateProductUseCaseTest {
     @Test
     void execute_givenDuplicateSlug_throwsSlugAlreadyExistsException() {
         var command = new CreateProductCommand("Test", "var-olan-slug", null,
-                null, new BigDecimal("50.00"));
+                null, new BigDecimal("50.00"), null);
 
         when(productRepository.existsBySlug("var-olan-slug")).thenReturn(true);
 

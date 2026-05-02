@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -82,6 +83,7 @@ public class ProductController {
 
     @Operation(summary = "Yeni ürün oluştur (ADMIN)")
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> create(@Valid @RequestBody CreateProductRequest request) {
         var product = createProductUseCase.execute(mapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -90,6 +92,7 @@ public class ProductController {
 
     @Operation(summary = "Ürün güncelle (ADMIN)")
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> update(@PathVariable UUID id,
                                                        @Valid @RequestBody UpdateProductRequest request) {
         var product = updateProductUseCase.execute(mapper.toCommand(id, request));
@@ -98,6 +101,7 @@ public class ProductController {
 
     @Operation(summary = "Ürünü pasife al (ADMIN)")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         deleteProductUseCase.execute(id);
         return ResponseEntity.noContent().build();
@@ -105,6 +109,7 @@ public class ProductController {
 
     @Operation(summary = "Ürüne varyant ekle (ADMIN)")
     @PostMapping("/{id}/variants")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> addVariant(@PathVariable UUID id,
                                                            @Valid @RequestBody AddVariantRequest request) {
         var variant = addVariantUseCase.execute(mapper.toCommand(id, request));

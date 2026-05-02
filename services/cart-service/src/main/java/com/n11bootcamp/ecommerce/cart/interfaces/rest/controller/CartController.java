@@ -31,27 +31,27 @@ public class CartController {
     private final ClearCartUseCase clearCartUseCase;
     private final CartMapper cartMapper;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/me")
     @Operation(summary = "Sepeti getir")
-    public ResponseEntity<Map<String, Object>> getCart(@PathVariable UUID userId) {
+    public ResponseEntity<Map<String, Object>> getCart(@RequestHeader("X-User-Id") UUID userId) {
         var cart = getCartUseCase.execute(userId);
         return ok(cartMapper.toResponse(cart));
     }
 
-    @PostMapping("/{userId}/items")
+    @PostMapping("/me/items")
     @Operation(summary = "Sepete ürün ekle")
     public ResponseEntity<Map<String, Object>> addItem(
-            @PathVariable UUID userId,
+            @RequestHeader("X-User-Id") UUID userId,
             @Valid @RequestBody AddCartItemRequest request) {
         var command = new AddCartItemCommand(userId, request.productId(), request.variantId(), request.quantity());
         var cart = addCartItemUseCase.execute(command);
         return ok(cartMapper.toResponse(cart));
     }
 
-    @PutMapping("/{userId}/items/{variantId}")
+    @PutMapping("/me/items/{variantId}")
     @Operation(summary = "Sepetteki ürün adedini güncelle")
     public ResponseEntity<Map<String, Object>> updateItem(
-            @PathVariable UUID userId,
+            @RequestHeader("X-User-Id") UUID userId,
             @PathVariable UUID variantId,
             @Valid @RequestBody UpdateCartItemRequest request) {
         var command = new UpdateCartItemCommand(userId, variantId, request.quantity());
@@ -59,18 +59,18 @@ public class CartController {
         return ok(cartMapper.toResponse(cart));
     }
 
-    @DeleteMapping("/{userId}/items/{variantId}")
+    @DeleteMapping("/me/items/{variantId}")
     @Operation(summary = "Sepetten ürün sil")
     public ResponseEntity<Map<String, Object>> removeItem(
-            @PathVariable UUID userId,
+            @RequestHeader("X-User-Id") UUID userId,
             @PathVariable UUID variantId) {
         var cart = removeCartItemUseCase.execute(userId, variantId);
         return ok(cartMapper.toResponse(cart));
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/me")
     @Operation(summary = "Sepeti temizle")
-    public ResponseEntity<Void> clearCart(@PathVariable UUID userId) {
+    public ResponseEntity<Void> clearCart(@RequestHeader("X-User-Id") UUID userId) {
         clearCartUseCase.execute(userId);
         return ResponseEntity.noContent().build();
     }

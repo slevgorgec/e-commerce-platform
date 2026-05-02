@@ -8,5 +8,6 @@ public record CreateProductCommand(
         String slug,
         String description,
         UUID categoryId,
-        BigDecimal basePrice
+        BigDecimal basePrice,
+        String imageUrl
 ) {}

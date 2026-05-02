@@ -36,8 +36,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding orderConfirmedBinding(Queue orderConfirmedQueue, TopicExchange ecommerceExchange) {
-        return BindingBuilder.bind(orderConfirmedQueue).to(ecommerceExchange).with("order.confirmed");
+    public Binding orderConfirmedBinding() {
+        return BindingBuilder.bind(orderConfirmedQueue()).to(ecommerceExchange()).with("order.confirmed");
     }
 
     @Bean

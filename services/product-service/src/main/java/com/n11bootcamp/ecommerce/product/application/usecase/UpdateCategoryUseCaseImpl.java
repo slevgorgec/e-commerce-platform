@@ -28,7 +28,7 @@ public class UpdateCategoryUseCaseImpl implements UpdateCategoryUseCase {
             throw new SlugAlreadyExistsException(command.slug());
         }
 
-        var updated = existing.withName(command.name(), command.slug());
+        var updated = existing.withName(command.name(), command.slug(), command.imageUrl());
         var saved = categoryRepository.save(updated);
         log.info("Kategori güncellendi: id={}", saved.id());
         return saved;

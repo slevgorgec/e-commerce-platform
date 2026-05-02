@@ -23,7 +23,7 @@ public class CreateCategoryUseCaseImpl implements CreateCategoryUseCase {
         if (categoryRepository.existsBySlug(command.slug())) {
             throw new SlugAlreadyExistsException(command.slug());
         }
-        var category = Category.create(command.name(), command.slug(), command.parentId());
+        var category = Category.create(command.name(), command.slug(), command.parentId(), command.imageUrl());
         var saved = categoryRepository.save(category);
         log.info("Kategori oluşturuldu: id={}, slug={}", saved.id(), saved.slug());
         return saved;

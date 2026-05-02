@@ -2,13 +2,13 @@ package com.n11bootcamp.ecommerce.user.infrastructure.security;
 
 import com.n11bootcamp.ecommerce.user.application.port.out.TokenGeneratorPort;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
@@ -39,7 +39,6 @@ public class JwtTokenProvider implements TokenGeneratorPort {
     }
 
     private SecretKey signingKey() {
-        var keyBytes = jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getSecret()));
     }
 }

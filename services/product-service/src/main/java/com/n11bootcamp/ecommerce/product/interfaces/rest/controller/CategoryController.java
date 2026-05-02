@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -45,6 +46,7 @@ public class CategoryController {
 
     @Operation(summary = "Yeni kategori oluştur (ADMIN)")
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> create(@Valid @RequestBody CreateCategoryRequest request) {
         var category = createCategoryUseCase.execute(mapper.toCommand(request));
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -53,6 +55,7 @@ public class CategoryController {
 
     @Operation(summary = "Kategori güncelle (ADMIN)")
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> update(@PathVariable UUID id,
                                                        @Valid @RequestBody UpdateCategoryRequest request) {
         var category = updateCategoryUseCase.execute(mapper.toCommand(id, request));
@@ -61,6 +64,7 @@ public class CategoryController {
 
     @Operation(summary = "Kategori sil (ADMIN)")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         deleteCategoryUseCase.execute(id);
         return ResponseEntity.noContent().build();

@@ -24,7 +24,7 @@ public class CreateProductUseCaseImpl implements CreateProductUseCase {
             throw new SlugAlreadyExistsException(command.slug());
         }
         var product = Product.create(command.name(), command.slug(), command.description(),
-                command.categoryId(), command.basePrice());
+                command.categoryId(), command.basePrice(), command.imageUrl());
         var saved = productRepository.save(product);
         log.info("Ürün oluşturuldu: id={}, slug={}", saved.id(), saved.slug());
         return saved;

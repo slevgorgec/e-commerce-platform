@@ -6,8 +6,8 @@ spring:
     name: order-service
   datasource:
     url: jdbc:postgresql://localhost:5435/order_db
-    username: postgres
-    password: postgres
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -23,8 +23,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: guest
-    password: guest
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
   jackson:
     serialization:
       write-dates-as-timestamps: false

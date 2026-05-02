@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface GetPaymentUseCase {
 
-    Payment getByOrderReference(UUID orderReference);
+    Payment getByOrderReference(UUID orderReference, UUID requesterId);
 }

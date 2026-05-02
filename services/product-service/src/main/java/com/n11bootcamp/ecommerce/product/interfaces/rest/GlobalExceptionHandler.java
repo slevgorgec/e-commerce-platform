@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -67,6 +68,13 @@ public class GlobalExceptionHandler {
                 "message", errors,
                 "path", req.getRequestURI()
         ));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex,
+                                                                   HttpServletRequest req) {
+        log.info("Yetki hatası: path={}", req.getRequestURI());
+        return error(HttpStatus.FORBIDDEN, "FORBIDDEN", "Bu işlem için yetkiniz yok", req.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)

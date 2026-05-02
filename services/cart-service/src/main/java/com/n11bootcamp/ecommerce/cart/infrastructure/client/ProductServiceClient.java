@@ -18,7 +18,7 @@ import java.util.UUID;
 interface ProductFeignClient {
 
     @GetMapping("/products/variants/{variantId}")
-    ApiResponse<VariantInfoResponse> getVariantInfo(@PathVariable UUID variantId);
+    ApiResponse<VariantInfoResponse> getVariantInfo(@PathVariable("variantId") UUID variantId);
 }
 
 @Slf4j

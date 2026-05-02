@@ -14,5 +14,6 @@ public record UpdateProductRequest(
         String description,
         UUID categoryId,
         @NotNull @DecimalMin("0.01") BigDecimal basePrice,
-        boolean active
+        boolean active,
+        @Size(max = 500) String imageUrl
 ) {}

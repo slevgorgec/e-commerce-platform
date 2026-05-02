@@ -13,5 +13,6 @@ public record CreateProductRequest(
         @NotBlank @Size(max = 255) String slug,
         String description,
         UUID categoryId,
-        @NotNull @DecimalMin("0.01") BigDecimal basePrice
+        @NotNull @DecimalMin("0.01") BigDecimal basePrice,
+        @Size(max = 500) String imageUrl
 ) {}

@@ -8,5 +8,6 @@ import java.util.UUID;
 public record CreateCategoryRequest(
         @NotBlank @Size(max = 100) String name,
         @NotBlank @Size(max = 100) String slug,
-        UUID parentId
+        UUID parentId,
+        @Size(max = 500) String imageUrl
 ) {}

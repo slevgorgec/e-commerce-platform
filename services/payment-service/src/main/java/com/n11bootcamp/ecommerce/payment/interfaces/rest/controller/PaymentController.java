@@ -31,7 +31,7 @@ public class PaymentController {
             @RequestHeader("X-User-Id") UUID userId
     ) {
         log.debug("Ödeme sorgulanıyor: orderReference={}, userId={}", orderReference, userId);
-        var payment = getPaymentUseCase.getByOrderReference(orderReference);
+        var payment = getPaymentUseCase.getByOrderReference(orderReference, userId);
         var response = paymentMapper.toResponse(payment);
 
         return ResponseEntity.ok(Map.of(

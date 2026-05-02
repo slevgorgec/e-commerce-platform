@@ -1,6 +1,7 @@
 package com.n11bootcamp.ecommerce.payment.interfaces.rest;
 
 import com.n11bootcamp.ecommerce.payment.domain.exception.DuplicatePaymentException;
+import com.n11bootcamp.ecommerce.payment.domain.exception.PaymentAccessDeniedException;
 import com.n11bootcamp.ecommerce.payment.domain.exception.PaymentNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
                                                                       HttpServletRequest req) {
         log.info("Ödeme bulunamadı: {}", ex.getMessage());
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", ex.getMessage(), req.getRequestURI());
+    }
+
+    @ExceptionHandler(PaymentAccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(PaymentAccessDeniedException ex,
+                                                                   HttpServletRequest req) {
+        log.info("Yetkisiz ödeme erişimi: {}", ex.getMessage());
+        return error(HttpStatus.FORBIDDEN, "FORBIDDEN", "Bu ödeme kaydına erişim yetkiniz yok", req.getRequestURI());
     }
 
     @ExceptionHandler(DuplicatePaymentException.class)
@@ -48,3 +56,4 @@ public class GlobalExceptionHandler {
         ));
     }
 }
+
