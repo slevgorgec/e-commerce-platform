@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
 
   # ─── INFRASTRUCTURE ──────────────────────────────────────────────────────────
@@ -15,6 +21,7 @@ services:
       - postgres-user-data:/var/lib/postgresql/data
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d user_db"]
       interval: 10s
@@ -34,6 +41,7 @@ services:
       - postgres-product-data:/var/lib/postgresql/data
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d product_db"]
       interval: 10s
@@ -53,6 +61,7 @@ services:
       - postgres-order-data:/var/lib/postgresql/data
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d order_db"]
       interval: 10s
@@ -72,6 +81,7 @@ services:
       - postgres-payment-data:/var/lib/postgresql/data
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d payment_db"]
       interval: 10s
@@ -87,6 +97,7 @@ services:
       - redis-data:/data
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -106,6 +117,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 15s
@@ -117,8 +129,12 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
+      - MEM_MAX_SPANS=50000
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:9411/health || exit 1"]
       interval: 15s
@@ -145,6 +161,7 @@ services:
       - IYZICO_BASE_URL=${IYZICO_BASE_URL}
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8888/actuator/health || exit 1"]
       interval: 15s
@@ -166,6 +183,7 @@ services:
       - SPRING_CONFIG_IMPORT=configserver:http://config-server:8888
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8761/actuator/health || exit 1"]
       interval: 15s
@@ -190,6 +208,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
     networks:
       - ecommerce-network
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
       interval: 15s
@@ -222,6 +241,7 @@ services:
       - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+    logging: *default-logging
     networks:
       - ecommerce-network
 
@@ -246,6 +266,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    logging: *default-logging
     networks:
       - ecommerce-network
 
@@ -268,6 +289,7 @@ services:
       - SPRING_CONFIG_IMPORT=configserver:http://config-server:8888
       - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    logging: *default-logging
     networks:
       - ecommerce-network
 
@@ -292,6 +314,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    logging: *default-logging
     networks:
       - ecommerce-network
 
@@ -319,6 +342,7 @@ services:
       - IYZICO_API_KEY=${IYZICO_API_KEY}
       - IYZICO_SECRET_KEY=${IYZICO_SECRET_KEY}
       - IYZICO_BASE_URL=${IYZICO_BASE_URL}
+    logging: *default-logging
     networks:
       - ecommerce-network
 
@@ -339,6 +363,7 @@ services:
       - SPRING_CONFIG_IMPORT=configserver:http://config-server:8888
       - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    logging: *default-logging
     networks:
       - ecommerce-network
 

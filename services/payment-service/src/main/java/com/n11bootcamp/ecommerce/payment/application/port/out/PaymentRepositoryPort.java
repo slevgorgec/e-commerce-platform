@@ -11,5 +11,7 @@ public interface PaymentRepositoryPort {
 
     Optional<Payment> findByOrderReference(UUID orderReference);
 
+    Optional<Payment> findByIyzicoToken(String iyzicoToken);
+
     boolean existsByOrderReference(UUID orderReference);
 }

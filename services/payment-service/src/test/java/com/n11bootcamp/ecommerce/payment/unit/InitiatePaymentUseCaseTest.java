@@ -1,7 +1,6 @@
 package com.n11bootcamp.ecommerce.payment.unit;
 
 import com.n11bootcamp.ecommerce.payment.application.dto.InitiatePaymentCommand;
-import com.n11bootcamp.ecommerce.payment.application.port.out.EventPublisherPort;
 import com.n11bootcamp.ecommerce.payment.application.port.out.IyzicoGatewayPort;
 import com.n11bootcamp.ecommerce.payment.application.port.out.PaymentRepositoryPort;
 import com.n11bootcamp.ecommerce.payment.application.usecase.InitiatePaymentUseCaseImpl;
@@ -31,38 +30,35 @@ class InitiatePaymentUseCaseTest {
     @Mock
     private IyzicoGatewayPort iyzicoGateway;
 
-    @Mock
-    private EventPublisherPort eventPublisher;
-
     @InjectMocks
     private InitiatePaymentUseCaseImpl useCase;
 
     @Test
-    void execute_givenValidCommand_whenIyzicoSucceeds_createsCompletedPaymentAndPublishesEvent() {
+    void execute_givenValidCommand_whenIyzicoSucceeds_storesCheckoutUrl() {
         var orderRef = UUID.randomUUID();
         var userId = UUID.randomUUID();
         var amount = new BigDecimal("299.90");
         var command = new InitiatePaymentCommand(orderRef, userId, amount, "TRY");
+        var checkoutUrl = "https://sandbox-cpp.iyzipay.com/checkout/pay/test-token";
+        var token = "test-iyzico-token";
 
         when(paymentRepository.existsByOrderReference(orderRef)).thenReturn(false);
         when(paymentRepository.save(any(Payment.class))).thenAnswer(inv -> inv.getArgument(0));
         when(iyzicoGateway.initiateCheckout(orderRef, userId, amount, "TRY"))
-                .thenReturn(new IyzicoGatewayPort.IyzicoCheckoutResult(true, "IYZICO-123", "{\"status\":\"success\"}"));
+                .thenReturn(new IyzicoGatewayPort.IyzicoCheckoutResult(true, checkoutUrl, token, null));
 
         var result = useCase.execute(command);
 
-        assertThat(result).isNotNull();
-        assertThat(result.orderReference()).isEqualTo(orderRef);
-        assertThat(result.status()).isEqualTo(PaymentStatus.COMPLETED);
-        assertThat(result.iyzicoPaymentId()).isEqualTo("IYZICO-123");
+        assertThat(result.status()).isEqualTo(PaymentStatus.PENDING);
+        assertThat(result.checkoutFormUrl()).isEqualTo(checkoutUrl);
+        assertThat(result.iyzicoToken()).isEqualTo(token);
+        assertThat(result.iyzicoPaymentId()).isNull();
 
         verify(paymentRepository, times(2)).save(any(Payment.class));
-        verify(eventPublisher).publishPaymentCompleted(eq(orderRef), eq(userId), eq(amount), eq("IYZICO-123"));
-        verify(eventPublisher, never()).publishPaymentFailed(any(), any(), any());
     }
 
     @Test
-    void execute_givenValidCommand_whenIyzicoFails_createsFailedPaymentAndPublishesEvent() {
+    void execute_givenValidCommand_whenIyzicoFails_savesFailedPayment() {
         var orderRef = UUID.randomUUID();
         var userId = UUID.randomUUID();
         var amount = new BigDecimal("299.90");
@@ -71,15 +67,13 @@ class InitiatePaymentUseCaseTest {
         when(paymentRepository.existsByOrderReference(orderRef)).thenReturn(false);
         when(paymentRepository.save(any(Payment.class))).thenAnswer(inv -> inv.getArgument(0));
         when(iyzicoGateway.initiateCheckout(orderRef, userId, amount, "TRY"))
-                .thenReturn(new IyzicoGatewayPort.IyzicoCheckoutResult(false, null, "Kart limiti aşıldı"));
+                .thenReturn(new IyzicoGatewayPort.IyzicoCheckoutResult(false, null, null, "Yetersiz bakiye"));
 
         var result = useCase.execute(command);
 
         assertThat(result.status()).isEqualTo(PaymentStatus.FAILED);
-        assertThat(result.iyzicoPaymentId()).isNull();
-
-        verify(eventPublisher).publishPaymentFailed(eq(orderRef), eq(userId), eq("Kart limiti aşıldı"));
-        verify(eventPublisher, never()).publishPaymentCompleted(any(), any(), any(), any());
+        assertThat(result.checkoutFormUrl()).isNull();
+        assertThat(result.iyzicoToken()).isNull();
     }
 
     @Test
@@ -95,6 +89,5 @@ class InitiatePaymentUseCaseTest {
 
         verify(paymentRepository, never()).save(any());
         verify(iyzicoGateway, never()).initiateCheckout(any(), any(), any(), any());
-        verify(eventPublisher, never()).publishPaymentCompleted(any(), any(), any(), any());
     }
 }

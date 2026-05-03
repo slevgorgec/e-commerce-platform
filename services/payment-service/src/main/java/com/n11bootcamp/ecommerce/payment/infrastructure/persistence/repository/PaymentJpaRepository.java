@@ -10,5 +10,7 @@ public interface PaymentJpaRepository extends JpaRepository<PaymentEntity, UUID>
 
     Optional<PaymentEntity> findByOrderReference(UUID orderReference);
 
+    Optional<PaymentEntity> findByIyzicoToken(String iyzicoToken);
+
     boolean existsByOrderReference(UUID orderReference);
 }

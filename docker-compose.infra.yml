@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
 
   # ── PostgreSQL — her servis için ayrı instance ──────────────────────────────
@@ -13,6 +19,7 @@ services:
       - "5433:5432"
     volumes:
       - postgres-user-data:/var/lib/postgresql/data
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d user_db"]
       interval: 10s
@@ -30,6 +37,7 @@ services:
       - "5434:5432"
     volumes:
       - postgres-product-data:/var/lib/postgresql/data
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d product_db"]
       interval: 10s
@@ -47,6 +55,7 @@ services:
       - "5435:5432"
     volumes:
       - postgres-order-data:/var/lib/postgresql/data
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d order_db"]
       interval: 10s
@@ -64,6 +73,7 @@ services:
       - "5436:5432"
     volumes:
       - postgres-payment-data:/var/lib/postgresql/data
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d payment_db"]
       interval: 10s
@@ -79,6 +89,7 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    logging: *default-logging
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -98,6 +109,7 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+    logging: *default-logging
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
       interval: 15s
@@ -111,6 +123,10 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
+      - MEM_MAX_SPANS=50000
+    logging: *default-logging
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:9411/health || exit 1"]
       interval: 15s

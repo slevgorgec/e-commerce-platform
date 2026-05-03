@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -38,8 +40,15 @@ public class PaymentEntity {
     @Column(name = "iyzico_payment_id")
     private String iyzicoPaymentId;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "iyzico_response", columnDefinition = "jsonb")
     private String iyzicoResponse;
+
+    @Column(name = "checkout_form_url", columnDefinition = "text")
+    private String checkoutFormUrl;
+
+    @Column(name = "iyzico_token")
+    private String iyzicoToken;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

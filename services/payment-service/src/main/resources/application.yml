@@ -54,6 +54,13 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+iyzico:
+  api-key: sandbox-jAF6LOHzIW6NPbTBbE0Sh1VZB9DBXGFE
+  secret-key: sandbox-35wJhCRyZv9g7VARW33CQywejndEaviE
+  base-url: https://sandbox-api.iyzipay.com
+  callback-url: http://localhost:8085/api/payments/iyzico-callback
+  frontend-result-url: http://localhost:5173/payment/result
+
 logging:
   level:
     root: INFO

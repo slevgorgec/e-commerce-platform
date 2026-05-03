@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -34,6 +36,7 @@ public class OrderEntity {
     /**
      * ShippingAddress JSON olarak saklanır (JSONB kolonu).
      */
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "shipping_address", nullable = false, columnDefinition = "jsonb")
     private String shippingAddress;
 

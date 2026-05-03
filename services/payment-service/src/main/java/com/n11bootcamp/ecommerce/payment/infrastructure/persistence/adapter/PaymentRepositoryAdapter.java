@@ -19,13 +19,17 @@ public class PaymentRepositoryAdapter implements PaymentRepositoryPort {
 
     @Override
     public Payment save(Payment payment) {
-        var entity = toEntity(payment);
-        return toDomain(jpaRepository.save(entity));
+        return toDomain(jpaRepository.save(toEntity(payment)));
     }
 
     @Override
     public Optional<Payment> findByOrderReference(UUID orderReference) {
         return jpaRepository.findByOrderReference(orderReference).map(this::toDomain);
+    }
+
+    @Override
+    public Optional<Payment> findByIyzicoToken(String iyzicoToken) {
+        return jpaRepository.findByIyzicoToken(iyzicoToken).map(this::toDomain);
     }
 
     @Override
@@ -43,6 +47,8 @@ public class PaymentRepositoryAdapter implements PaymentRepositoryPort {
         entity.setStatus(payment.status().name());
         entity.setIyzicoPaymentId(payment.iyzicoPaymentId());
         entity.setIyzicoResponse(payment.iyzicoResponse());
+        entity.setCheckoutFormUrl(payment.checkoutFormUrl());
+        entity.setIyzicoToken(payment.iyzicoToken());
         entity.setCreatedAt(payment.createdAt());
         entity.setUpdatedAt(payment.updatedAt());
         return entity;
@@ -58,6 +64,8 @@ public class PaymentRepositoryAdapter implements PaymentRepositoryPort {
                 PaymentStatus.valueOf(entity.getStatus()),
                 entity.getIyzicoPaymentId(),
                 entity.getIyzicoResponse(),
+                entity.getCheckoutFormUrl(),
+                entity.getIyzicoToken(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

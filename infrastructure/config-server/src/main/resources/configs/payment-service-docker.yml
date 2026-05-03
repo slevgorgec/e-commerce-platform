@@ -13,3 +13,10 @@ management:
   zipkin:
     tracing:
       endpoint: http://zipkin:9411/api/v2/spans
+
+iyzico:
+  api-key: sandbox-jAF6LOHzIW6NPbTBbE0Sh1VZB9DBXGFE
+  secret-key: sandbox-35wJhCRyZv9g7VARW33CQywejndEaviE
+  base-url: https://sandbox-api.iyzipay.com
+  callback-url: http://localhost:8085/api/payments/iyzico-callback
+  frontend-result-url: http://localhost:5173/payment/result

@@ -7,5 +7,9 @@ public interface IyzicoGatewayPort {
 
     IyzicoCheckoutResult initiateCheckout(UUID orderReference, UUID userId, BigDecimal amount, String currency);
 
-    record IyzicoCheckoutResult(boolean success, String paymentId, String responseJson) {}
+    IyzicoRetrieveResult retrievePaymentResult(String token);
+
+    record IyzicoCheckoutResult(boolean success, String checkoutFormUrl, String iyzicoToken, String errorMessage) {}
+
+    record IyzicoRetrieveResult(boolean success, String paymentId, String responseJson, String failureReason) {}
 }
